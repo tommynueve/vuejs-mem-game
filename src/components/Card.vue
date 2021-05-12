@@ -1,8 +1,8 @@
 <template>
-  <div class="card-container">
+  <li class="card-container">
     <div class="card card-back" :class="{ 'card-flip-back': isFlipped }">Back</div>
     <div class="card card-front" :class="{ 'card-flip-front': isFlipped }" @click="onCardFrontClick">Front</div>
-  </div>
+  </li>
 </template>
 
 <script>
@@ -13,10 +13,12 @@ export default {
   setup() {
     const isFlipped = ref(false);
 
+    const hideCard = () => (isFlipped.value = false);
+
     const onCardFrontClick = () => {
       isFlipped.value = true;
       setTimeout(() => {
-        isFlipped.value = false;
+        hideCard();
       }, 1500);
     };
 
@@ -27,7 +29,7 @@ export default {
 
 <style>
 .card-container {
-  --card-size: 100px;
+  --card-size: 125px;
   width: var(--card-size);
   height: var(--card-size);
   position: relative;
@@ -36,10 +38,11 @@ export default {
   position: absolute;
   height: 100%;
   width: 100%;
-  border-radius: 10px;
+  border-radius: 8px;
   padding: 0.5rem;
   transition: transform 0.8s ease;
   transform-style: preserve-3d;
+  box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
 }
 
 .card-back {

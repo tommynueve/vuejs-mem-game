@@ -1,10 +1,8 @@
 <template>
-  <h1>Hello World</h1>
-  <div class="container">
-    <Card />
-    <Card />
-    <Card />
-  </div>
+  <h1 class="title">Memory Game</h1>
+  <ul class="container">
+    <Card v-for="index in 25" :key="index" />
+  </ul>
 </template>
 
 <script>
@@ -25,12 +23,18 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+
+.title {
+  margin: 2rem;
 }
 
 .container {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
+  max-width: min-content;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  place-items: center;
 }
 </style>
