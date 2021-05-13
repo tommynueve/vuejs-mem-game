@@ -1,12 +1,20 @@
 <template>
   <h1 class="title">Memory Game</h1>
-  <ul class="container">
-    <Card v-for="(card, index) in deck" :key="index" :frontValue="card.frontValue" />
+  <ul class="container" v-if="deck !== []">
+    <Card
+      v-for="(card, index) in deck"
+      :key="index"
+      :frontValue="card.frontValue"
+      :isVisible="card.isVisible"
+      :position="index"
+      @cardBackClick="onCardClick"
+    />
   </ul>
   <button @click="startNewGame()">New Game</button>
 </template>
 
 <script>
+import { onMounted } from 'vue';
 import Card from './components/Card.vue';
 import useGame from './hooks/useGame';
 
@@ -16,8 +24,16 @@ export default {
     Card,
   },
   setup() {
-    //const { deck, startNewGame } = useGame();
-    return { ...useGame() };
+    const { deck, startNewGame, showCard } = useGame();
+
+    onMounted(() => startNewGame());
+
+    const onCardClick = ({ frontValue, position }) => {
+      showCard(position);
+      console.log(frontValue, position);
+    };
+
+    return { deck, startNewGame, onCardClick };
   },
 };
 </script>

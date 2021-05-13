@@ -1,13 +1,11 @@
 <template>
   <li class="card-container">
-    <div class="card card-front" :class="{ 'card-flip-front': isFlipped }">{{ frontValue }}</div>
-    <div class="card card-back" :class="{ 'card-flip-back': isFlipped }" @click="onCardBackClick">Back</div>
+    <div class="card card-front" :class="{ 'card-flip-front': isVisible }">{{ frontValue }}</div>
+    <div class="card card-back" :class="{ 'card-flip-back': isVisible }" @click="onCardBackClick">Back</div>
   </li>
 </template>
 
 <script>
-import { ref } from 'vue';
-
 export default {
   name: 'Card',
   props: {
@@ -15,20 +13,25 @@ export default {
       type: String,
       required: true,
     },
+    position: {
+      type: Number,
+      required: true,
+    },
+    isVisible: {
+      type: Boolean,
+      default: false,
+    },
   },
-  setup() {
-    const isFlipped = ref(false);
-
-    const hideCard = () => (isFlipped.value = false);
-
+  emits: ['cardBackClick'],
+  setup(props, context) {
     const onCardBackClick = () => {
-      isFlipped.value = true;
-      setTimeout(() => {
-        hideCard();
-      }, 1500);
+      context.emit('cardBackClick', {
+        frontValue: props.frontValue,
+        position: props.position,
+      });
     };
 
-    return { onCardBackClick, isFlipped };
+    return { onCardBackClick };
   },
 };
 </script>
