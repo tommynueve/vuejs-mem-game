@@ -1,15 +1,15 @@
 <template>
   <h1 class="title">Memory Game</h1>
-  <ul class="container" v-if="deck !== []">
+  <transition-group tag="ul" name="shuffle" class="container" v-if="deck !== []">
     <Card
       v-for="(card, index) in deck"
-      :key="index"
+      :key="card.key"
       :frontValue="card.frontValue"
       :isVisible="card.isVisible || card.isDiscovered"
       :position="index"
       @cardBackClick="onCardClick"
     />
-  </ul>
+  </transition-group>
   <button @click="startNewGame()">New Game</button>
 </template>
 
@@ -58,6 +58,10 @@ export default {
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   place-items: center;
+}
+
+.shuffle-move {
+  transition: transform 0.8s ease;
 }
 
 button {

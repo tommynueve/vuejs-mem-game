@@ -2,12 +2,13 @@ const cardFrontValues = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
 export const createDeck = (cards = 16) => {
   if (cards % 2 !== 0) throw Error('Deck must contain a number of cards divisible by 2.');
-  const firstSetOfCards = Array.from({ length: cards / 2 }, (_, i) => ({
-    frontValue: cardFrontValues[i],
+  const firstSetOfCards = Array.from({ length: cards }, (_, i) => ({
+    key: i,
+    frontValue: cardFrontValues[i < cards / 2 ? i : i - cards / 2],
     isVisible: false,
     isDiscovered: false,
   }));
-  return [...firstSetOfCards, ...JSON.parse(JSON.stringify(firstSetOfCards))];
+  return firstSetOfCards;
 };
 
 export const shuffleDeck = (deck) => {
