@@ -18,12 +18,25 @@ export default function useGame(deckSize = 16) {
 
   watchEffect(() => {
     if (flippedCards.value.length >= 2) {
-      setTimeout(() => {
-        flippedCards.value.forEach((flippedCard) => (flippedCard.isVisible = false));
-        flippedCards.value = [];
-      }, 1000);
+      _areFlippedCardsEqual() ? _discoverPair() : _hideFlippedCards();
     }
   });
+
+  const _discoverPair = () => {
+    flippedCards.value.forEach((flippedCard) => (flippedCard.isDiscovered = true));
+    flippedCards.value = [];
+  };
+
+  const _areFlippedCardsEqual = () => {
+    return flippedCards.value[0].frontValue === flippedCards.value[1].frontValue;
+  };
+
+  const _hideFlippedCards = () => {
+    setTimeout(() => {
+      flippedCards.value.forEach((flippedCard) => (flippedCard.isVisible = false));
+      flippedCards.value = [];
+    }, 1000);
+  };
 
   return { deck, startNewGame, showCard };
 }
