@@ -3,7 +3,7 @@
   <div class="container">
     <div class="menu">
       <p>Pairs discovered: {{ pairsFound }}</p>
-      <p>Time: {{ formattedTime }}</p>
+      <p>&#128337; {{ formattedTime }}</p>
     </div>
     <transition-group tag="ul" name="shuffle" class="game-grid" v-if="deck !== []">
       <Card

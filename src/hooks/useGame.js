@@ -31,7 +31,7 @@ export default function useGame(deckSize = 16) {
   });
 
   const formattedTime = computed(() => {
-    return `${Math.floor(elapsedTime.value / 60)}:${Math.floor(elapsedTime.value % 60)}`;
+    return `${Math.floor(elapsedTime.value / 60)}:${('00' + Math.floor(elapsedTime.value % 60)).slice(-2)}`;
   });
 
   const _startTimer = () => {
@@ -40,7 +40,10 @@ export default function useGame(deckSize = 16) {
     }, 1000);
   };
 
-  const _stopTimer = () => clearInterval(intervalHandler);
+  const _stopTimer = () => {
+    clearInterval(intervalHandler);
+    elapsedTime.value = 0;
+  };
 
   const _discoverPair = () => {
     flippedCards.value.forEach((flippedCard) => (flippedCard.isDiscovered = true));
