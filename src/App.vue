@@ -3,7 +3,7 @@
   <div class="container">
     <div class="menu">
       <p>Pairs discovered: {{ pairsFound }}</p>
-      <button @click="startNewGame()">Restart Game</button>
+      <p>Time: {{ formattedTime }}</p>
     </div>
     <transition-group tag="ul" name="shuffle" class="game-grid" v-if="deck !== []">
       <Card
@@ -15,6 +15,7 @@
         @cardBackClick="onCardClick"
       />
     </transition-group>
+    <button @click="startNewGame()" class="restart">Restart Game</button>
   </div>
 </template>
 
@@ -29,7 +30,7 @@ export default {
     Card,
   },
   setup() {
-    const { deck, startNewGame, showCard, pairsFound } = useGame();
+    const { deck, startNewGame, showCard, pairsFound, formattedTime } = useGame();
 
     onMounted(() => startNewGame());
 
@@ -38,7 +39,7 @@ export default {
       console.log(frontValue, position);
     };
 
-    return { deck, startNewGame, onCardClick, pairsFound };
+    return { deck, startNewGame, onCardClick, pairsFound, formattedTime };
   },
 };
 </script>
@@ -67,7 +68,7 @@ export default {
 }
 
 .game-grid {
-  margin-top: 2rem;
+  margin: 2rem 0;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
@@ -78,15 +79,10 @@ export default {
   transition: transform 0.8s ease;
 }
 
-button {
+.restart {
   font-size: 1.15rem;
-  margin-left: 2rem;
   text-transform: capitalize;
-  background-color: #fff;
-  border: none;
   border-radius: 10px;
   padding: 0.5rem 1rem;
-  color: #000;
-  cursor: pointer;
 }
 </style>

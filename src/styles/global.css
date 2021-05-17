@@ -4,12 +4,17 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bgcolor: #fff;
+  --color: #000;
+}
+
 html,
 body {
   margin: 0;
   line-height: 1.5;
-  background-color: #000;
-  color: #fff;
+  background-color: var(--bgcolor);
+  color: var(--color);
 }
 
 ol,
@@ -29,4 +34,17 @@ h3 {
 h1,
 h2 {
   line-height: 1.2;
+}
+
+button {
+  color: var(--bgcolor);
+  border: none;
+  background-color: var(--color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  -webkit-transform: translateY(-3px);
+  transform: translateY(-3px);
 }

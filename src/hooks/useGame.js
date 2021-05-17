@@ -4,10 +4,13 @@ import { createDeck, shuffleDeck } from '../utils/deck';
 export default function useGame(deckSize = 16) {
   const deck = ref([]);
   const flippedCards = ref([]);
+  let intervalHandler;
+  let elapsedTime = ref(0);
 
   const startNewGame = () => {
     deck.value = createDeck(deckSize);
     shuffleDeck(deck.value);
+    _startTimer();
   };
 
   const showCard = (position) => {
@@ -27,6 +30,18 @@ export default function useGame(deckSize = 16) {
     return `${discoveredPairs} of ${deck.value.length / 2}`;
   });
 
+  const formattedTime = computed(() => {
+    return `${Math.floor(elapsedTime.value / 60)}:${Math.floor(elapsedTime.value % 60)}`;
+  });
+
+  const _startTimer = () => {
+    intervalHandler = setInterval(() => {
+      elapsedTime.value++;
+    }, 1000);
+  };
+
+  const _stopTimer = () => clearInterval(intervalHandler);
+
   const _discoverPair = () => {
     flippedCards.value.forEach((flippedCard) => (flippedCard.isDiscovered = true));
     flippedCards.value = [];
@@ -43,5 +58,5 @@ export default function useGame(deckSize = 16) {
     }, 1000);
   };
 
-  return { deck, startNewGame, showCard, pairsFound };
+  return { deck, startNewGame, showCard, pairsFound, formattedTime, _stopTimer };
 }

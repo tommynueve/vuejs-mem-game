@@ -1,7 +1,9 @@
 <template>
   <li class="card-container">
     <div class="card card-front" :class="{ 'card-flip-front': isVisible }">{{ frontValue }}</div>
-    <div class="card card-back" :class="{ 'card-flip-back': isVisible }" @click="onCardBackClick">Back</div>
+    <div class="card card-back" :class="{ 'card-flip-back': isVisible }" @click="onCardBackClick">
+      <img src="../assets/AvalancheLogo.jpg" alt="Card back" />
+    </div>
   </li>
 </template>
 
@@ -38,7 +40,7 @@ export default {
 
 <style>
 .card-container {
-  --card-size: 125px;
+  --card-size: 110px;
   width: var(--card-size);
   height: var(--card-size);
   position: relative;
@@ -48,10 +50,11 @@ export default {
   height: 100%;
   width: 100%;
   border-radius: 8px;
-  padding: 0.5rem;
   transition: transform 0.8s ease;
   transform-style: preserve-3d;
   box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
+  overflow: hidden;
+  cursor: pointer;
 }
 
 .card-front {
@@ -68,5 +71,9 @@ export default {
 }
 .card-flip-front {
   transform: rotateY(0deg);
+}
+
+img {
+  width: 100%;
 }
 </style>
