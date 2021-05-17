@@ -10,7 +10,8 @@
         v-for="(card, index) in deck"
         :key="card.key"
         :frontValue="card.frontValue"
-        :isVisible="card.isVisible || card.isDiscovered"
+        :isVisible="card.isVisible"
+        :isDiscovered="card.isDiscovered"
         :position="index"
         @cardBackClick="onCardClick"
       />

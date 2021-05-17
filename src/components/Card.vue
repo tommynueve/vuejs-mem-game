@@ -1,7 +1,13 @@
 <template>
   <li class="card-container">
-    <div class="card card-front" :class="{ 'card-flip-front': isVisible }">{{ frontValue }}</div>
+    <div class="card card-front" :class="{ 'card-flip-front': isVisible }">
+      {{ frontValue }}
+      <transition name="shine">
+        <div aria-hidden="true" class="card-shine" v-if="isDiscovered"></div>
+      </transition>
+    </div>
     <div class="card card-back" :class="{ 'card-flip-back': isVisible }" @click="onCardBackClick">
+      {{ frontValue }}
       <img src="../assets/AvalancheLogo.jpg" alt="Card back" />
     </div>
   </li>
@@ -20,6 +26,10 @@ export default {
       required: true,
     },
     isVisible: {
+      type: Boolean,
+      default: false,
+    },
+    isDiscovered: {
       type: Boolean,
       default: false,
     },
@@ -58,14 +68,39 @@ export default {
 }
 
 .card-front {
-  background-color: red;
   backface-visibility: hidden;
   transform: rotateY(180deg);
 }
+
 .card-back {
-  background-color: green;
   backface-visibility: hidden;
 }
+
+.card-shine {
+  position: absolute;
+  height: 200%;
+  width: 200%;
+  top: -190px;
+  left: -190px;
+  transform: rotate(45deg);
+  background-color: #fff;
+  opacity: 0;
+}
+
+.shine-enter-from {
+  opacity: 1;
+}
+
+.shine-enter-to {
+  transform: translate(100%, 100%);
+  opacity: 0;
+}
+
+.shine-enter-active,
+.shine-leave-active {
+  transition: all 3s ease;
+}
+
 .card-flip-back {
   transform: rotateY(180deg);
 }
