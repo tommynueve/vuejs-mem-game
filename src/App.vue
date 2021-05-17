@@ -1,16 +1,21 @@
 <template>
   <h1 class="title">Memory Game</h1>
-  <transition-group tag="ul" name="shuffle" class="container" v-if="deck !== []">
-    <Card
-      v-for="(card, index) in deck"
-      :key="card.key"
-      :frontValue="card.frontValue"
-      :isVisible="card.isVisible || card.isDiscovered"
-      :position="index"
-      @cardBackClick="onCardClick"
-    />
-  </transition-group>
-  <button @click="startNewGame()">New Game</button>
+  <div class="container">
+    <div class="menu">
+      <p>Pairs discovered: {{ pairsFound }}</p>
+      <button @click="startNewGame()">Restart Game</button>
+    </div>
+    <transition-group tag="ul" name="shuffle" class="game-grid" v-if="deck !== []">
+      <Card
+        v-for="(card, index) in deck"
+        :key="card.key"
+        :frontValue="card.frontValue"
+        :isVisible="card.isVisible || card.isDiscovered"
+        :position="index"
+        @cardBackClick="onCardClick"
+      />
+    </transition-group>
+  </div>
 </template>
 
 <script>
@@ -24,7 +29,7 @@ export default {
     Card,
   },
   setup() {
-    const { deck, startNewGame, showCard } = useGame();
+    const { deck, startNewGame, showCard, pairsFound } = useGame();
 
     onMounted(() => startNewGame());
 
@@ -33,7 +38,7 @@ export default {
       console.log(frontValue, position);
     };
 
-    return { deck, startNewGame, onCardClick };
+    return { deck, startNewGame, onCardClick, pairsFound };
   },
 };
 </script>
@@ -44,16 +49,25 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
 }
 
 .title {
   margin: 2rem;
 }
 
+.menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .container {
   max-width: min-content;
   margin: 0 auto;
+}
+
+.game-grid {
+  margin-top: 2rem;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
@@ -65,7 +79,14 @@ export default {
 }
 
 button {
-  margin-top: 2rem;
-  font-size: 1.5rem;
+  font-size: 1.15rem;
+  margin-left: 2rem;
+  text-transform: capitalize;
+  background-color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  color: #000;
+  cursor: pointer;
 }
 </style>

@@ -8,6 +8,8 @@ html,
 body {
   margin: 0;
   line-height: 1.5;
+  background-color: #000;
+  color: #fff;
 }
 
 ol,

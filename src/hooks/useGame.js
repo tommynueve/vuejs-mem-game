@@ -1,4 +1,4 @@
-import { ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import { createDeck, shuffleDeck } from '../utils/deck';
 
 export default function useGame(deckSize = 16) {
@@ -22,6 +22,11 @@ export default function useGame(deckSize = 16) {
     }
   });
 
+  const pairsFound = computed(() => {
+    const discoveredPairs = deck.value.filter((card) => card.isDiscovered).length / 2;
+    return `${discoveredPairs} of ${deck.value.length / 2}`;
+  });
+
   const _discoverPair = () => {
     flippedCards.value.forEach((flippedCard) => (flippedCard.isDiscovered = true));
     flippedCards.value = [];
@@ -38,5 +43,5 @@ export default function useGame(deckSize = 16) {
     }, 1000);
   };
 
-  return { deck, startNewGame, showCard };
+  return { deck, startNewGame, showCard, pairsFound };
 }
