@@ -1,13 +1,13 @@
 <template>
   <li class="card-container">
     <div class="card card-front" :class="{ 'card-flip-front': isVisible }">
-      {{ frontValue }}
+      <img :src="require(`../assets/${frontImage}`)" />
       <transition name="shine">
         <div aria-hidden="true" class="card-shine" v-if="isDiscovered"></div>
       </transition>
     </div>
     <div class="card card-back" :class="{ 'card-flip-back': isVisible }" @click="onCardBackClick">
-      {{ frontValue }}
+      <!-- {{ frontValue }} -->
       <img src="../assets/AvalancheLogo.jpg" alt="Card back" />
     </div>
   </li>
@@ -20,6 +20,10 @@ export default {
     frontValue: {
       type: String,
       required: true,
+    },
+    frontImage: {
+      type: String,
+      required: false,
     },
     position: {
       type: Number,
@@ -80,8 +84,8 @@ export default {
   position: absolute;
   height: 200%;
   width: 200%;
-  top: -190px;
-  left: -190px;
+  top: -200%;
+  left: -200%;
   transform: rotate(45deg);
   background-color: #fff;
   opacity: 0;

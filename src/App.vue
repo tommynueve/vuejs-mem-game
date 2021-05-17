@@ -10,6 +10,7 @@
         v-for="(card, index) in deck"
         :key="card.key"
         :frontValue="card.frontValue"
+        :frontImage="card.frontImage"
         :isVisible="card.isVisible"
         :isDiscovered="card.isDiscovered"
         :position="index"
