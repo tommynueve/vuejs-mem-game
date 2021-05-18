@@ -1,8 +1,14 @@
-import { ref } from 'vue';
-import { dummyScoreEntries } from '../utils/score';
+import { ref, computed } from 'vue';
+import { dummyScoreEntries, sortScores } from '../utils/score';
 
-export default function useScore(useDummyScores = false) {
-  const scores = ref(useDummyScores ? dummyScoreEntries : []);
+const scores = ref(dummyScoreEntries);
 
-  return { scores };
+export default function useScore() {
+  const addNewScore = (name, time) => {
+    scores.value = [...scores.value, { name, time }];
+  };
+
+  const topScores = computed((max = 10) => sortScores(scores.value).slice(0, max));
+
+  return { topScores, addNewScore };
 }

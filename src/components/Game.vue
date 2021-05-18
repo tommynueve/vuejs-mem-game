@@ -21,51 +21,41 @@
         <div class="win-modal" v-if="gameStatus === GAME_STATUS.FINISHED">
           <p class="win-sign">You win</p>
           <p class="win-time">{{ formattedTime }}</p>
+          <p v-if="elapsedTime"></p>
         </div>
       </transition>
     </div>
-    <button @click="onRestartClick" class="restart">Restart Game</button>
+    <button @click="startNewGame()" class="restart">Restart Game</button>
   </div>
 </template>
 
 <script>
+import { onMounted, computed } from 'vue';
+
 import Card from './Card.vue';
-import { GAME_STATUS } from '../hooks/useGame';
+import useGame, { GAME_STATUS } from '../hooks/useGame';
+import { formatTime } from '../utils/time';
 
 export default {
   name: 'Game',
   components: {
     Card,
   },
-  props: {
-    deck: {
-      type: Array,
-      required: true,
-    },
-    formattedTime: {
-      type: String,
-      required: true,
-    },
-    remainingPairs: {
-      type: Number,
-      required: false,
-    },
-    gameStatus: {
-      type: String,
-      required: false,
-    },
-  },
-  emits: ['cardClick', 'restartClick'],
-  setup(props, context) {
-    const onCardClick = (payload) => {
-      context.emit('cardClick', payload);
+  setup() {
+    const { deck, startNewGame, showCard, remainingPairs, elapsedTime, gameStatus } = useGame();
+
+    onMounted(() => startNewGame());
+
+    const onCardClick = ({ frontValue, position }) => {
+      showCard(position);
+      console.log(frontValue, position);
     };
 
-    const onRestartClick = () => {
-      context.emit('restartClick');
-    };
+    const formattedTime = computed(() => {
+      return formatTime(elapsedTime.value);
+    });
 
-    return { onCardClick, onRestartClick, GAME_STATUS };
+    return { deck, startNewGame, onCardClick, remainingPairs, elapsedTime, formattedTime, gameStatus, GAME_STATUS };
   },
 };
 </script>

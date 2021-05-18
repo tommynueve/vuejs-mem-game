@@ -6,9 +6,9 @@ export const GAME_STATUS = {
   IN_PROGRESS: 'in_progress',
   FINISHED: 'finished',
 };
+const deck = ref([]);
 
 export default function useGame(deckSize = 16) {
-  const deck = ref([]);
   const flippedCards = ref([]);
   let intervalHandler;
   let elapsedTime = ref(0);
@@ -34,10 +34,6 @@ export default function useGame(deckSize = 16) {
     const totalPairs = Math.ceil(deck.value.length / 2);
     const discoveredPairs = Math.ceil(deck.value.filter((card) => card.isDiscovered).length / 2);
     return totalPairs - discoveredPairs;
-  });
-
-  const formattedTime = computed(() => {
-    return `${Math.floor(elapsedTime.value / 60)}:${('00' + Math.floor(elapsedTime.value % 60)).slice(-2)}`;
   });
 
   const _startTimer = () => {
@@ -82,5 +78,5 @@ export default function useGame(deckSize = 16) {
     }
   });
 
-  return { deck, startNewGame, showCard, remainingPairs, formattedTime, gameStatus };
+  return { deck, startNewGame, showCard, remainingPairs, elapsedTime, gameStatus };
 }
