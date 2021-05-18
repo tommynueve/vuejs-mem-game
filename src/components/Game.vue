@@ -18,44 +18,54 @@
         />
       </transition-group>
       <transition name="modal">
-        <div class="win-modal" v-if="gameStatus === GAME_STATUS.FINISHED">
-          <p class="win-sign">You win</p>
-          <p class="win-time">{{ formattedTime }}</p>
-          <p v-if="elapsedTime"></p>
-        </div>
+        <WinModal v-if="gameStatus === GAME_STATUS.FINISHED" :score="formattedTime" :isHighscore="isTopScore(elapsedTime)" />
       </transition>
     </div>
-    <button @click="startNewGame()" class="restart">Restart Game</button>
+    <TheButton @onClick="onRestartClick">Restart Game</TheButton>
   </div>
 </template>
 
 <script>
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, watch } from 'vue';
 
 import Card from './Card.vue';
+import WinModal from './WinModal.vue';
+import TheButton from './TheButton.vue';
 import useGame, { GAME_STATUS } from '../hooks/useGame';
+import useScore from '../hooks/useScore';
 import { formatTime } from '../utils/time';
 
 export default {
   name: 'Game',
   components: {
     Card,
+    WinModal,
+    TheButton,
   },
   setup() {
     const { deck, startNewGame, showCard, remainingPairs, elapsedTime, gameStatus } = useGame();
+    const { isTopScore, addNewScorePendingName, clearNewTime } = useScore();
 
     onMounted(() => startNewGame());
 
-    const onCardClick = ({ frontValue, position }) => {
-      showCard(position);
-      console.log(frontValue, position);
+    watch(gameStatus, () => {
+      if (gameStatus.value === GAME_STATUS.FINISHED) {
+        if (isTopScore(elapsedTime.value)) addNewScorePendingName(elapsedTime.value);
+      }
+    });
+
+    const onCardClick = ({ position }) => showCard(position);
+
+    const onRestartClick = () => {
+      clearNewTime();
+      startNewGame();
     };
 
     const formattedTime = computed(() => {
       return formatTime(elapsedTime.value);
     });
 
-    return { deck, startNewGame, onCardClick, remainingPairs, elapsedTime, formattedTime, gameStatus, GAME_STATUS };
+    return { deck, elapsedTime, onCardClick, remainingPairs, formattedTime, gameStatus, GAME_STATUS, isTopScore, onRestartClick };
   },
 };
 </script>
@@ -84,12 +94,12 @@ export default {
   align-items: center;
 }
 
-.modal-enter-from {
-  opacity: 0;
+.modal-enter-active {
+  transition: opacity 1.5s ease;
 }
 
-.modal-enter-active {
-  transition: opacity 2s ease;
+.modal-enter-from {
+  opacity: 0;
 }
 
 .shuffle-move {
@@ -98,36 +108,5 @@ export default {
 
 .title {
   margin: 2rem;
-}
-
-.restart {
-  font-size: 1.15rem;
-  text-transform: capitalize;
-  border-radius: 10px;
-  padding: 0.5rem 1rem;
-}
-
-.win-modal {
-  width: 100%;
-  height: 100%;
-  background-color: hsl(0, 0%, 20%, 0.8);
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  font-size: 5rem;
-  font-weight: 700;
-}
-
-.win-sign {
-  color: hsl(120, 100%, 45%);
-}
-
-.win-time {
-  color: #fff;
 }
 </style>

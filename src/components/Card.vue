@@ -7,7 +7,7 @@
       </transition>
     </div>
     <div class="card card-back" :class="{ 'card-flip-back': isVisible }" @click="onCardBackClick">
-      {{ frontValue }}
+      <!-- {{ frontValue }} -->
       <img src="../assets/AvalancheLogo.jpg" alt="Card back" />
     </div>
   </li>

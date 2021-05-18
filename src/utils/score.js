@@ -3,11 +3,11 @@ export const dummyScoreEntries = [
   { name: 'MadMax', time: 4 },
   { name: 'Henrik Larsson', time: 5 },
   { name: 'Zlatan', time: 24 },
-  { name: 'xTheBesTx', time: 89 },
+  { name: 'xTheBesTx', time: 32 },
   { name: 'pikachu', time: 31 },
   { name: 'aaa', time: 14 },
   { name: 'bbb', time: 19 },
-  { name: 'f0rest', time: 91 },
+  { name: 'f0rest', time: 51 },
   { name: 'get_right', time: 12 },
 ];
 
