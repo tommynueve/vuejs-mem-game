@@ -1,39 +1,39 @@
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, watchEffect } from 'vue';
 import { createDeck, shuffleDeck } from '../utils/deck';
+
+export const GAME_STATUS = {
+  NOT_STARTED: 'not_started',
+  IN_PROGRESS: 'in_progress',
+  FINISHED: 'finished',
+};
 
 export default function useGame(deckSize = 16) {
   const deck = ref([]);
   const flippedCards = ref([]);
   let intervalHandler;
   let elapsedTime = ref(0);
+  let gameStatus = ref(GAME_STATUS.NOT_STARTED);
 
   const startNewGame = () => {
     deck.value = createDeck(deckSize);
-    flippedCards.value = [];
     shuffleDeck(deck.value);
+    flippedCards.value = [];
+    gameStatus.value = GAME_STATUS.IN_PROGRESS;
     if (intervalHandler) _stopTimer();
     _startTimer();
   };
 
   const showCard = (position) => {
     if (flippedCards.value.length >= 2) return;
+
     deck.value[position].isVisible = true;
     flippedCards.value = [...flippedCards.value, deck.value[position]];
   };
 
-  watch(
-    flippedCards,
-    () => {
-      if (flippedCards.value.length >= 2) {
-        _areFlippedCardsEqual() ? _discoverPair() : _hideFlippedCards();
-      }
-    },
-    { deep: true }
-  );
-
-  const pairsFound = computed(() => {
-    const discoveredPairs = deck.value.filter((card) => card.isDiscovered).length / 2;
-    return `${Math.ceil(discoveredPairs)} of ${deck.value.length / 2}`;
+  const remainingPairs = computed(() => {
+    const totalPairs = Math.ceil(deck.value.length / 2);
+    const discoveredPairs = Math.ceil(deck.value.filter((card) => card.isDiscovered).length / 2);
+    return totalPairs - discoveredPairs;
   });
 
   const formattedTime = computed(() => {
@@ -41,15 +41,13 @@ export default function useGame(deckSize = 16) {
   });
 
   const _startTimer = () => {
+    elapsedTime.value = 0;
     intervalHandler = setInterval(() => {
       elapsedTime.value++;
     }, 1000);
   };
 
-  const _stopTimer = () => {
-    clearInterval(intervalHandler);
-    elapsedTime.value = 0;
-  };
+  const _stopTimer = () => clearInterval(intervalHandler);
 
   const _discoverPair = () => {
     flippedCards.value.forEach((flippedCard) => (flippedCard.isDiscovered = true));
@@ -67,5 +65,22 @@ export default function useGame(deckSize = 16) {
     }, 1000);
   };
 
-  return { deck, startNewGame, showCard, pairsFound, formattedTime, _stopTimer };
+  watch(
+    flippedCards,
+    () => {
+      if (flippedCards.value.length >= 2) {
+        _areFlippedCardsEqual() ? _discoverPair() : _hideFlippedCards();
+      }
+    },
+    { deep: true }
+  );
+
+  watchEffect(() => {
+    if (remainingPairs.value === 0) {
+      _stopTimer();
+      gameStatus.value = GAME_STATUS.FINISHED;
+    }
+  });
+
+  return { deck, startNewGame, showCard, remainingPairs, formattedTime, gameStatus };
 }
